@@ -164,7 +164,7 @@ f = Fernet(key)
 #************* ONLY FIRST TIME RUN [CODE BLOCK START] **********************
 #One time Code for Encrypting Wordlist [not required for regular runs]
 
-WordList  = pd.read_csv(FilePath+'Wordlist.txt', sep='\t', engine='python', quoting=csv.QUOTE_NONE, index_col=False, encoding='iso-8859-1', on_bad_lines ='warn')
+WordList  = pd.read_csv('Wordlist.txt', sep='\t', engine='python', quoting=csv.QUOTE_NONE, index_col=False, encoding='iso-8859-1', on_bad_lines ='warn')#FilePath+
 WordList["Code"] = WordList["Code"].astype(str)
 WordList['Code_E'] = WordList['Code'].astype(str).apply(lambda x1: f.encrypt(bytes(x1,'utf8')))
 WordList['Code_2'] = WordList['Code_E'].astype(str).apply(lambda x1: str(f.decrypt(bytes(x1[2:-1],'utf8'))))
@@ -181,7 +181,7 @@ WordList['Word_3'] = WordList['Word_3'].astype(str).replace(to_replace=r'"$', va
 WordList['Word_3'] = WordList['Word_3'].astype(str).replace(to_replace=r"'$", value='', regex=True)
 
 #Write an Encrypted Wordlist to Database [WordList_E = Encrypted]
-sqliteConnection = sql.connect(FilePath + 'KJIT.db')
+sqliteConnection = sql.connect( 'KJIT.db')#FilePath +
 #WordList.to_sql('WordList', sqliteConnection,  if_exists='replace', index=False) - For validation only
 WordList_E = WordList[['Code_E','Word_E']].copy()
 WordList_E.to_sql('WordList_E', sqliteConnection,  if_exists='replace', index=False)
@@ -193,7 +193,7 @@ sqliteConnection.close()
 
 
 login_name = input("\nPlease Enter your Login Id { Name } : ")
-sqliteConnection = sql.connect(FilePath+'KJIT.db')
+sqliteConnection = sql.connect('KJIT.db') #FilePath+
 login_Validation = Loginusercheck(sqliteConnection,'User_Master',login_name)
 if login_Validation>0 :
     # if name is found in directory then ask for Master password or generate a password first otherwise dont let the user into the while loop
@@ -231,7 +231,7 @@ while True:
     if n == '1':  # Store a password
 
 
-        sqliteConnection = sql.connect(FilePath+'KJIT.db')
+        sqliteConnection = sql.connect('KJIT.db')#FilePath+
         Existing_PassMaster_1 = Ret_Pass(sqliteConnection,'PassMaster')
 
         print("Entered into choice 1 ")
@@ -247,7 +247,7 @@ while True:
                 #print("performs the function of overwriting the password though some code")
                 category_password = str(input("Enter the password which needs to be  stored : "))
                 category_password_E = f.encrypt(category_password.encode())
-                sqliteConnection = sql.connect(FilePath + 'KJIT.db')
+                sqliteConnection = sql.connect('KJIT.db')#FILEPATH +
                 Update_Pass(sqliteConnection, 'PassMaster', info.upper(), login_name.upper(), Date_N, category_password_E)
 
             elif response1 == 'no':
@@ -257,7 +257,7 @@ while True:
         else :
             category_password = str(input("Enter the password which needs to be  stored : "))
             category_password_E = f.encrypt(category_password.encode())
-            sqliteConnection = sql.connect(FilePath + 'KJIT.db')
+            sqliteConnection = sql.connect('KJIT.db')#FILEPATH +
             Insert_Pass(sqliteConnection, 'PassMaster', info.upper(), login_name.upper(), Date_N, category_password_E)
 
 
@@ -326,7 +326,7 @@ while True:
 
             if response2.upper() == 'YES':
                 Category_N = str(input("Enter the category against which the password will be stored : "))
-                sqliteConnection =sql.connect(FilePath+'KJIT.db')
+                sqliteConnection =sql.connect('KJIT.db')#FILEPATH +
                 #Read current password master
                 Existing_Pass = Ret_Pass(sqliteConnection,"PassMaster")
                 #print(Existing_Pass[["User_ID",'Category','Decrypted_Passphrase',"Timestamp"]] )
@@ -337,12 +337,12 @@ while True:
                         "This Category of password already exists in our database. \nDo you want overwrite this ? {yes or no} ")
                     if response1 == 'yes':
                         print("performs the function of overwriting the password though some code")
-                        sqliteConnection = sql.connect(FilePath + 'KJIT.db')
+                        sqliteConnection = sql.connect('KJIT.db')#FILEPATH +
                         Update_Pass(sqliteConnection, 'PassMaster', Category_N.upper(), login_name.upper(), Date_N, encCode)
                     elif response1 == 'no':
                         print("Please Create a new category and re-enter. Choose Option 1  ")
                 else:
-                    sqliteConnection = sql.connect(FilePath + 'KJIT.db')
+                    sqliteConnection = sql.connect('KJIT.db')#FILEPATH +
                     Insert_Pass(sqliteConnection, 'PassMaster', Category_N.upper(), login_name.upper(), Date_N, encCode)
 
 
@@ -367,7 +367,7 @@ while True:
 
             print(dlist)
 
-            sqliteConnection = sql.connect(FilePath + 'KJIT.db')
+            sqliteConnection = sql.connect('KJIT.db')#FILEPATH +
             Word_List = Ret_Dictionary(sqliteConnection, 'WordList_E')
 
             for a in dlist:
@@ -385,7 +385,7 @@ while True:
 
             if response2.upper() == 'YES':
                 Category_N = str(input("Enter the category against which the password will be stored : "))
-                sqliteConnection =sql.connect(FilePath+'KJIT.db')
+                sqliteConnection =sql.connect('KJIT.db')#FILEPATH +
                 #Read current password master
                 Existing_Pass = Ret_Pass(sqliteConnection,"PassMaster")
                 #print(Existing_Pass[["User_ID",'Category','Decrypted_Passphrase',"Timestamp"]] )
@@ -396,12 +396,12 @@ while True:
                         "This Category of password already exists in our database. \nDo you want overwrite this ? {yes or no} ")
                     if response1 == 'yes':
                         print("performs the function of overwriting the password though some code")
-                        sqliteConnection = sql.connect(FilePath + 'KJIT.db')
+                        sqliteConnection = sql.connect('KJIT.db')#FILEPATH +
                         Update_Pass(sqliteConnection, 'PassMaster', Category_N.upper(), login_name.upper(), Date_N, encPhrase)
                     elif response1 == 'no':
                         print("Please Create a new category and re-enter. Choose Option 1  ")
                 else:
-                    sqliteConnection = sql.connect(FilePath + 'KJIT.db')
+                    sqliteConnection = sql.connect( 'KJIT.db')#FILEPATH +
                     Insert_Pass(sqliteConnection, 'PassMaster', Category_N.upper(), login_name.upper(), Date_N, encPhrase)
 
 
@@ -418,7 +418,7 @@ while True:
         Category_N  =  str(input("Enter the category against which the password might have got stored : "))
 
         # Retrieve  password from  the Db
-        sqliteConnection = sql.connect(FilePath+'KJIT.db')
+        sqliteConnection = sql.connect('KJIT.db')#FilePath+
         #Read current password master
         Existing_PassMaster = Ret_Pass(sqliteConnection,'PassMaster')
         #print (Existing_PassMaster)
