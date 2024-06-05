@@ -156,7 +156,7 @@ def Update_Pass (conn,tbl,Category_N, User_ID_N, Date_N, encPhrase):
 
 
 #@@@@@@ Encryption related block
-with open('thekey.key', "rb") as mykey: #FilePath+
+with open('./thekey.key', "rb") as mykey: #FilePath+
     key = mykey.read()
 f = Fernet(key)
 
